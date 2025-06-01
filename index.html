@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Трекер Сахара и Питания</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #fafafa;
+            color: #0a0a0a;
+            line-height: 1.5;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e4e4e7;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e4e4e7;
+            background: white;
+            color: #0a0a0a;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background: #f4f4f5;
+        }
+        
+        .btn-primary {
+            background: #0a0a0a;
+            color: white;
+            border-color: #0a0a0a;
+        }
+        
+        .btn-primary:hover {
+            background: #27272a;
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+        
+        .input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #e4e4e7;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.15s ease;
+        }
+        
+        .input:focus {
+            outline: none;
+            border-color: #0a0a0a;
+            box-shadow: 0 0 0 2px rgb(0 0 0 / 0.05);
+        }
+        
+        .label {
+            display: block;
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: #374151;
+            text-align: left;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .number-input {
+            display: flex;
+            align-items: center;
+            border: 1px solid #e4e4e7;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .number-input input {
+            border: none;
+            padding: 1rem;
+            font-size: 1rem;
+            text-align: center;
+            flex: 1;
+            background: transparent;
+        }
+        
+        .number-input input:focus {
+            outline: none;
+        }
+        
+        .number-btn {
+            background: #f4f4f5;
+            border: none;
+            padding: 1rem;
+            cursor: pointer;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+            transition: background-color 0.15s ease;
+        }
+        
+        .number-btn:hover {
+            background: #e4e4e7;
+        }
+        
+        .btn-add {
+            background: #0a0a0a;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .btn-add:hover {
+            background: #27272a;
+            transform: translateY(-1px);
+        }
+        
+        .datalist-container {
+            position: relative;
+        }
+        
+        .header {
+            background: white;
+            border-bottom: 1px solid #e4e4e7;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            flex: 1;
+        }
+        
+        .day-card {
+            margin-bottom: 1rem;
+        }
+        
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e4e4e7;
+        }
+        
+        .day-date {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .entry {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f4f4f5;
+        }
+        
+        .entry:last-child {
+            border-bottom: none;
+        }
+        
+        .entry-time {
+            font-size: 0.75rem;
+            color: #6b7280;
+            min-width: 3.5rem;
+            margin-top: 0.125rem;
+        }
+        
+        .entry-content {
+            flex: 1;
+        }
+        
+        .entry-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .entry-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .sugar-level {
+            font-weight: 600;
+        }
+        
+        .sugar-good {
+            color: #16a34a;
+        }
+        
+        .sugar-okay {
+            color: #ca8a04;
+        }
+        
+        .sugar-high {
+            color: #dc2626;
+        }
+        
+        .add-form {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e4e4e7;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .add-form-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+        
+        .add-form-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .collapse-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .collapsed .collapse-icon {
+            transform: rotate(180deg);
+        }
+        
+        .add-form-content {
+            transition: all 0.3s ease;
+            overflow: hidden;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .collapsed .add-form-content {
+            max-height: 0;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .form-tabs-content {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e4e4e7;
+            padding: 1rem;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: end;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 0.25rem;
+            margin-bottom: 1rem;
+            background: #f4f4f5;
+            padding: 0.25rem;
+            border-radius: 8px;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            text-align: center;
+            border-radius: 6px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.15s ease;
+        }
+        
+        .tab.active {
+            background: white;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+        
+        .no-entries {
+            text-align: center;
+            color: #6b7280;
+            font-style: italic;
+            padding: 2rem;
+        }
+        
+        .export-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e4e4e7;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .user-info {
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            padding: 1rem;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        @media (max-width: 640px) {
+            .container {
+                padding: 0.5rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .form-group {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Экран регистрации -->
+    <div id="registration-screen" class="container hidden">
+        <div class="card" style="margin-top: 2rem;">
+            <h1 class="title" style="margin-bottom: 1.5rem;">Добро пожаловать! 👋</h1>
+            <form id="registration-form">
+                <div class="form-group">
+                    <label class="label">Имя</label>
+                    <input type="text" class="input" id="user-name" required>
+                </div>
+                <div class="form-group">
+                    <label class="label">Возраст</label>
+                    <input type="number" class="input" id="user-age" required>
+                </div>
+                <div class="form-group">
+                    <label class="label">Вес (кг)</label>
+                    <input type="number" class="input" id="user-weight" step="0.1" required>
+                </div>
+                <div class="form-group">
+                    <label class="label">Рост (см)</label>
+                    <input type="number" class="input" id="user-height" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    Начать ✨
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Основной экран -->
+    <div id="main-screen" class="hidden">
+        <div class="header">
+            <div class="header-content">
+                <h1 class="title">Трекер Питания</h1>
+                <button class="btn btn-sm" onclick="showSettings()">⚙️</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Форма добавления -->
+            <div class="add-form" id="add-form">
+                <div class="add-form-header" onclick="toggleAddForm()">
+                    <span class="add-form-title">Добавить запись</span>
+                </div>
+                
+                <div class="add-form-content" id="add-form-content">
+                    <div class="tabs">
+                        <button class="tab active" id="sugar-tab" onclick="switchTab('sugar')">📊 Сахар</button>
+                        <button class="tab" id="food-tab" onclick="switchTab('food')">🍽️ Еда</button>
+                    </div>
+
+                    <!-- Форма сахара -->
+                    <form id="sugar-form">
+                        <div class="form-group">
+                            <label class="label">Уровень сахара</label>
+                            <div class="number-input">
+                                <button type="button" class="number-btn" onclick="adjustSugar(-0.1)">−</button>
+                                <input type="number" id="sugar-level" step="0.1" value="5.5" min="0" max="50" required>
+                                <button type="button" class="number-btn" onclick="adjustSugar(0.1)">+</button>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="label">Дата</label>
+                                <input type="date" class="input" id="sugar-date" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="label">Время</label>
+                                <input type="time" class="input" id="sugar-time" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-add">Добавить</button>
+                    </form>
+                    
+                    <!-- Форма еды -->
+                    <form id="food-form" class="hidden">
+                        <div class="form-group">
+                            <label class="label">Название</label>
+                            <div class="datalist-container">
+                                <input type="text" class="input" id="food-title" list="food-options" placeholder="Завтрак" required>
+                                <datalist id="food-options">
+                                    <option value="Завтрак">
+                                    <option value="Обед">
+                                    <option value="Ужин">
+                                    <option value="Перекус">
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="label">Описание</label>
+                            <input type="text" class="input" id="food-description" placeholder="Овсянка с фруктами">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="label">Дата</label>
+                                <input type="date" class="input" id="food-date" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="label">Время</label>
+                                <input type="time" class="input" id="food-time" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-add">Добавить</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Дни -->
+            <div id="days-container"></div>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактирования -->
+    <div id="edit-modal" class="modal hidden">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2 id="edit-modal-title">Редактировать день</h2>
+                <button class="btn btn-sm" onclick="closeEditModal()">✕</button>
+            </div>
+            
+            <div class="tabs">
+                <button class="tab active" id="edit-sugar-tab" onclick="switchEditTab('sugar')">📊 Сахар</button>
+                <button class="tab" id="edit-food-tab" onclick="switchEditTab('food')">🍽️ Еда</button>
+            </div>
+
+            <!-- Форма редактирования сахара -->
+            <form id="edit-sugar-form">
+                <div class="form-group">
+                    <label class="label">Уровень сахара</label>
+                    <div class="number-input">
+                        <button type="button" class="number-btn" onclick="adjustEditSugar(-0.1)">−</button>
+                        <input type="number" id="edit-sugar-level" step="0.1" value="5.5" min="0" max="50" required>
+                        <button type="button" class="number-btn" onclick="adjustEditSugar(0.1)">+</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="label">Дата</label>
+                    <input type="date" class="input" id="edit-sugar-date" required>
+                </div>
+                <div class="form-group">
+                    <label class="label">Время</label>
+                    <input type="time" class="input" id="edit-sugar-time" required>
+                </div>
+                <button type="submit" class="btn-add">Добавить</button>
+            </form>
+
+            <!-- Форма редактирования еды -->
+            <form id="edit-food-form" class="hidden">
+                <div class="form-group">
+                    <label class="label">Название</label>
+                    <div class="datalist-container">
+                        <input type="text" class="input" id="edit-food-title" list="edit-food-options" required>
+                        <datalist id="edit-food-options">
+                            <option value="Завтрак">
+                            <option value="Обед">
+                            <option value="Ужин">
+                            <option value="Перекус">
+                        </datalist>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="label">Описание</label>
+                    <input type="text" class="input" id="edit-food-description">
+                </div>
+                <div class="form-group">
+                    <label class="label">Дата</label>
+                    <input type="date" class="input" id="edit-food-date" required>
+                </div>
+                <div class="form-group">
+                    <label class="label">Время</label>
+                    <input type="time" class="input" id="edit-food-time" required>
+                </div>
+                <button type="submit" class="btn-add">Добавить</button>
+            </form>
+
+            <div id="edit-entries" style="margin-top: 1.5rem;"></div>
+        </div>
+    </div>
+
+    <!-- Модальное окно настроек -->
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2>Настройки</h2>
+                <button class="btn btn-sm" onclick="closeSettings()">✕</button>
+            </div>
+            
+            <div id="user-info" class="user-info"></div>
+            
+            <div class="export-section">
+                <h3 style="margin-bottom: 1rem;">Экспорт/Импорт данных</h3>
+                <div class="grid">
+                    <button class="btn" onclick="exportData()">📤 Экспорт</button>
+                    <label class="btn" style="cursor: pointer;">
+                        📥 Импорт
+                        <input type="file" accept=".json" style="display: none;" onchange="importData(this)">
+                    </label>
+                </div>
+            </div>
+            
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e4e4e7;">
+                <button class="btn" onclick="resetApp()" style="width: 100%; color: #dc2626;">
+                    🗑️ Сбросить все данные
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Переводы
+        const translations = {
+            ru: {
+                welcome: 'Добро пожаловать! 👋',
+                name: 'Имя',
+                age: 'Возраст',
+                weight: 'Вес (кг)',
+                height: 'Рост (см)',
+                start: 'Начать ✨',
+                foodTracker: 'Трекер Питания',
+                sugar: '🩸 Сахар',
+                food: '🍽️ Еда',
+                sugarLevel: 'Уровень сахара',
+                time: 'Время',
+                title: 'Название',
+                description: 'Описание',
+                edit: 'Редактировать день',
+                save: 'Сохранить',
+                settings: 'Настройки',
+                exportImport: 'Экспорт/Импорт данных',
+                export: '📤 Экспорт',
+                import: '📥 Импорт',
+                reset: '🗑️ Сбросить все данные',
+                noEntries: 'Записей пока нет'
+            }
+        };
+
+        let currentLang = 'ru';
+        let userData = null;
+        let dailyData = {};
+        let editingDate = null;
+        let currentTab = 'sugar';
+
+        // Инициализация
+        function init() {
+            loadData();
+            if (!userData) {
+                showRegistration();
+            } else {
+                showMainScreen();
+            }
+            setCurrentTime();
+        }
+
+        function loadData() {
+            try {
+                userData = JSON.parse(localStorage.getItem('userData') || 'null');
+                dailyData = JSON.parse(localStorage.getItem('dailyData') || '{}');
+            } catch (e) {
+                console.error('Ошибка загрузки данных:', e);
+                userData = null;
+                dailyData = {};
+            }
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem('userData', JSON.stringify(userData));
+                localStorage.setItem('dailyData', JSON.stringify(dailyData));
+            } catch (e) {
+                console.error('Ошибка сохранения данных:', e);
+                alert('Ошибка сохранения данных!');
+            }
+        }
+
+        function showRegistration() {
+            document.getElementById('registration-screen').classList.remove('hidden');
+            document.getElementById('main-screen').classList.add('hidden');
+        }
+
+        function showMainScreen() {
+            document.getElementById('registration-screen').classList.add('hidden');
+            document.getElementById('main-screen').classList.remove('hidden');
+            renderDays();
+        }
+
+        function setCurrentTime() {
+            const now = new Date();
+            const timeStr = now.toTimeString().slice(0, 5);
+            const dateStr = formatDateForInput(now);
+            
+            document.getElementById('sugar-time').value = timeStr;
+            document.getElementById('food-time').value = timeStr;
+            document.getElementById('sugar-date').value = dateStr;
+            document.getElementById('food-date').value = dateStr;
+        }
+
+        // Форматирование даты для input
+        function formatDateForInput(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Форматирование даты для отображения с человеческими названиями
+        function formatDateDisplay(dateStr) {
+            const date = new Date(dateStr + 'T00:00:00');
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            // Сегодня
+            if (dateStr === formatDateForInput(today)) {
+                return 'Сегодня';
+            }
+            
+            // Вчера
+            if (dateStr === formatDateForInput(yesterday)) {
+                return 'Вчера';
+            }
+            
+            // Дни недели для последней недели
+            const daysDiff = Math.floor((today - date) / (1000 * 60 * 60 * 24));
+            if (daysDiff <= 7 && daysDiff > 0) {
+                const weekdays = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+                return weekdays[date.getDay()];
+            }
+            
+            // Обычный формат для старых дат
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = String(date.getFullYear()).slice(2);
+            return `${day}/${month}/${year}`;
+        }
+
+        // Переключение формы добавления
+        function toggleAddForm() {
+            const form = document.getElementById('add-form');
+            form.classList.toggle('collapsed');
+        }
+
+        // Определение цвета сахара
+        function getSugarColorClass(level) {
+            if (level >= 3.9 && level <= 5.5) return 'sugar-good';
+            if (level >= 5.6 && level <= 6.1) return 'sugar-okay';
+            if (level >= 6.2) return 'sugar-high';
+            return 'sugar-level';
+        }
+
+        // Функции для + и - кнопок
+        function adjustSugar(amount) {
+            const input = document.getElementById('sugar-level');
+            const current = parseFloat(input.value) || 5.5;
+            const newValue = Math.max(0, Math.min(50, current + amount));
+            input.value = newValue.toFixed(1);
+        }
+
+        function adjustEditSugar(amount) {
+            const input = document.getElementById('edit-sugar-level');
+            const current = parseFloat(input.value) || 5.5;
+            const newValue = Math.max(0, Math.min(50, current + amount));
+            input.value = newValue.toFixed(1);
+        }
+
+        // Регистрация
+        document.getElementById('registration-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            userData = {
+                name: document.getElementById('user-name').value,
+                age: parseInt(document.getElementById('user-age').value),
+                weight: parseFloat(document.getElementById('user-weight').value),
+                height: parseInt(document.getElementById('user-height').value),
+                registrationDate: new Date().toISOString()
+            };
+            
+            saveData();
+            showMainScreen();
+        });
+
+        // Переключение вкладок
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            document.getElementById('sugar-tab').classList.toggle('active', tab === 'sugar');
+            document.getElementById('food-tab').classList.toggle('active', tab === 'food');
+            
+            document.getElementById('sugar-form').classList.toggle('hidden', tab !== 'sugar');
+            document.getElementById('food-form').classList.toggle('hidden', tab !== 'food');
+            
+            setCurrentTime();
+        }
+
+        function switchEditTab(tab) {
+            document.getElementById('edit-sugar-tab').classList.toggle('active', tab === 'sugar');
+            document.getElementById('edit-food-tab').classList.toggle('active', tab === 'food');
+            
+            document.getElementById('edit-sugar-form').classList.toggle('hidden', tab !== 'sugar');
+            document.getElementById('edit-food-form').classList.toggle('hidden', tab !== 'food');
+        }
+
+        // Добавление записей
+        document.getElementById('sugar-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const date = document.getElementById('sugar-date').value;
+            const level = parseFloat(document.getElementById('sugar-level').value);
+            const time = document.getElementById('sugar-time').value;
+            
+            if (!dailyData[date]) {
+                dailyData[date] = { sugar: [], food: [] };
+            }
+            
+            dailyData[date].sugar.push({
+                id: Date.now(),
+                level: level,
+                time: time,
+                timestamp: new Date().toISOString()
+            });
+            
+            saveData();
+            renderDays();
+            
+            // Сброс формы и переключение на еду
+            document.getElementById('sugar-form').reset();
+            document.getElementById('sugar-level').value = '5.5';
+            switchTab('food');
+            setCurrentTime();
+        });
+
+        document.getElementById('food-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const date = document.getElementById('food-date').value;
+            const title = document.getElementById('food-title').value;
+            const description = document.getElementById('food-description').value;
+            const time = document.getElementById('food-time').value;
+            
+            if (!dailyData[date]) {
+                dailyData[date] = { sugar: [], food: [] };
+            }
+            
+            dailyData[date].food.push({
+                id: Date.now(),
+                title: title,
+                description: description,
+                time: time,
+                timestamp: new Date().toISOString()
+            });
+            
+            saveData();
+            renderDays();
+            
+            // Сброс формы
+            document.getElementById('food-form').reset();
+            setCurrentTime();
+        });
+
+        // Отображение дней
+        function renderDays() {
+            const container = document.getElementById('days-container');
+            container.innerHTML = '';
+            
+            // Определяем, какую вкладку показывать по умолчанию
+            const today = new Date().toISOString().split('T')[0];
+            const todayData = dailyData[today];
+            const hasTodaySugar = todayData && todayData.sugar.length > 0;
+            
+            if (!hasTodaySugar) {
+                switchTab('sugar');
+            } else {
+                switchTab('food');
+            }
+            
+            // Получаем последние 30 дней
+            const dates = [];
+            for (let i = 0; i < 30; i++) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                dates.push(date.toISOString().split('T')[0]);
+            }
+            
+            dates.forEach(date => {
+                const dayData = dailyData[date];
+                if (dayData && (dayData.sugar.length > 0 || dayData.food.length > 0)) {
+                    container.appendChild(createDayCard(date, dayData));
+                }
+            });
+            
+            if (container.children.length === 0) {
+                container.innerHTML = '<div class="no-entries">Записей пока нет. Добавьте первую запись!</div>';
+            }
+        }
+
+        function createDayCard(date, data) {
+            const card = document.createElement('div');
+            card.className = 'card day-card';
+            
+            const dateObj = new Date(date + 'T00:00:00');
+            const dateStr = formatDateDisplay(date);
+            
+            let entriesHtml = '';
+            
+            // Сортируем записи по времени
+            const allEntries = [
+                ...data.sugar.map(s => ({ ...s, type: 'sugar' })),
+                ...data.food.map(f => ({ ...f, type: 'food' }))
+            ].sort((a, b) => a.time.localeCompare(b.time));
+            
+            allEntries.forEach(entry => {
+                if (entry.type === 'sugar') {
+                    const colorClass = getSugarColorClass(entry.level);
+                    entriesHtml += `
+                        <div class="entry">
+                            <div class="entry-time">${entry.time}</div>
+                            <div class="entry-content">
+                                <div class="entry-title sugar-level ${colorClass}">📊 ${entry.level} ммоль/л</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    entriesHtml += `
+                        <div class="entry">
+                            <div class="entry-time">${entry.time}</div>
+                            <div class="entry-content">
+                                <div class="entry-title">🍽️ ${entry.title}</div>
+                                ${entry.description ? `<div class="entry-description">${entry.description}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            card.innerHTML = `
+                <div class="day-header">
+                    <div class="day-date">${dateStr}</div>
+                    <button class="btn btn-sm" onclick="editDay('${date}')">✏️</button>
+                </div>
+                ${entriesHtml}
+            `;
+            
+            return card;
+        }
+
+        // Редактирование дня
+        function editDay(date) {
+            editingDate = date;
+            const dayData = dailyData[date] || { sugar: [], food: [] };
+            
+            document.getElementById('edit-modal-title').textContent = `Редактировать ${date}`;
+            document.getElementById('edit-sugar-date').value = date;
+            document.getElementById('edit-food-date').value = date;
+            document.getElementById('edit-modal').classList.remove('hidden');
+            
+            renderEditEntries();
+            switchEditTab('sugar');
+        }
+
+        function renderEditEntries() {
+            const container = document.getElementById('edit-entries');
+            const dayData = dailyData[editingDate] || { sugar: [], food: [] };
+            
+            let html = '<h3 style="margin-bottom: 1rem;">Записи за день:</h3>';
+            
+            dayData.sugar.forEach(entry => {
+                const colorClass = getSugarColorClass(entry.level);
+                html += `
+                    <div class="entry" style="background: #f9fafb; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div class="entry-title sugar-level ${colorClass}">📊 ${entry.level} ммоль/л</div>
+                                <div class="entry-time">${entry.time}</div>
+                            </div>
+                            <button class="btn btn-sm" onclick="deleteEntry('${editingDate}', 'sugar', ${entry.id})" style="color: #dc2626;">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            dayData.food.forEach(entry => {
+                html += `
+                    <div class="entry" style="background: #f9fafb; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div class="entry-title">🍽️ ${entry.title}</div>
+                                ${entry.description ? `<div class="entry-description">${entry.description}</div>` : ''}
+                                <div class="entry-time">${entry.time}</div>
+                            </div>
+                            <button class="btn btn-sm" onclick="deleteEntry('${editingDate}', 'food', ${entry.id})" style="color: #dc2626;">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            if (dayData.sugar.length === 0 && dayData.food.length === 0) {
+                html += '<div class="no-entries">Записей пока нет</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function deleteEntry(date, type, id) {
+            if (!dailyData[date]) return;
+            
+            dailyData[date][type] = dailyData[date][type].filter(entry => entry.id !== id);
+            
+            // Удаляем день если записей не осталось
+            if (dailyData[date].sugar.length === 0 && dailyData[date].food.length === 0) {
+                delete dailyData[date];
+            }
+            
+            saveData();
+            renderEditEntries();
+            renderDays();
+        }
+
+        // Формы редактирования
+        document.getElementById('edit-sugar-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const date = document.getElementById('edit-sugar-date').value;
+            const level = parseFloat(document.getElementById('edit-sugar-level').value);
+            const time = document.getElementById('edit-sugar-time').value;
+            
+            if (!dailyData[date]) {
+                dailyData[date] = { sugar: [], food: [] };
+            }
+            
+            dailyData[date].sugar.push({
+                id: Date.now(),
+                level: level,
+                time: time,
+                timestamp: new Date().toISOString()
+            });
+            
+            saveData();
+            renderEditEntries();
+            renderDays();
+            
+            document.getElementById('edit-sugar-form').reset();
+            document.getElementById('edit-sugar-level').value = '5.5';
+            document.getElementById('edit-sugar-date').value = editingDate;
+        });
+
+        document.getElementById('edit-food-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const date = document.getElementById('edit-food-date').value;
+            const title = document.getElementById('edit-food-title').value;
+            const description = document.getElementById('edit-food-description').value;
+            const time = document.getElementById('edit-food-time').value;
+            
+            if (!dailyData[date]) {
+                dailyData[date] = { sugar: [], food: [] };
+            }
+            
+            dailyData[date].food.push({
+                id: Date.now(),
+                title: title,
+                description: description,
+                time: time,
+                timestamp: new Date().toISOString()
+            });
+            
+            saveData();
+            renderEditEntries();
+            renderDays();
+            
+            document.getElementById('edit-food-form').reset();
+            document.getElementById('edit-food-date').value = editingDate;
+        });
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.add('hidden');
+            editingDate = null;
+        }
+
+        // Настройки
+        function showSettings() {
+            document.getElementById('user-info').innerHTML = `
+                <strong>${userData.name}</strong><br>
+                Возраст: ${userData.age} лет<br>
+                Вес: ${userData.weight} кг<br>
+                Рост: ${userData.height} см<br>
+                Регистрация: ${new Date(userData.registrationDate).toLocaleDateString('ru-RU')}
+            `;
+            document.getElementById('settings-modal').classList.remove('hidden');
+        }
+
+        function closeSettings() {
+            document.getElementById('settings-modal').classList.add('hidden');
+        }
+
+        // Экспорт/Импорт
+        function exportData() {
+            const data = {
+                userData: userData,
+                dailyData: dailyData,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `food-tracker-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData(input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (data.userData && data.dailyData) {
+                        if (confirm('Импорт заменит все текущие данные. Продолжить?')) {
+                            userData = data.userData;
+                            dailyData = data.dailyData;
+                            saveData();
+                            renderDays();
+                            closeSettings();
+                            alert('Данные успешно импортированы!');
+                        }
+                    } else {
+                        alert('Неверный формат файла!');
+                    }
+                } catch (e) {
+                    alert('Ошибка чтения файла!');
+                }
+            };
+            reader.readAsText(file);
+            
+            // Сброс input
+            input.value = '';
+        }
+
+        function resetApp() {
+            if (confirm('Вы уверены? Все данные будут удалены безвозвратно!')) {
+                localStorage.clear();
+                userData = null;
+                dailyData = {};
+                closeSettings();
+                showRegistration();
+            }
+        }
+
+        // Запуск приложения
+        init();
+    </script>
+</body>
+</html>
